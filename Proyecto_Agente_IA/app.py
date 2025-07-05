@@ -25,6 +25,7 @@ st.set_page_config(
     layout="wide",
 )
 
+
 # Function to get price from products.csv
 def get_product_price(product_id):
     """Get price from products.csv file or products_with_prices.csv if available"""
@@ -193,6 +194,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+
 # Initialize session state
 def init_session():
     if "thread_id" not in st.session_state:
@@ -216,6 +218,7 @@ def init_session():
 
 
 init_session()
+
 
 # Function to format tool calls nicely
 def format_tool_call(tool_call):

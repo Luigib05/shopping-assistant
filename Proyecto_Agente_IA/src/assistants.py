@@ -45,8 +45,11 @@ support_runnable = support_prompt.partial(time=datetime.now) | llm.bind_tools(
     support_tools
 )
 
+
 # TODO
-def sales_assistant(state: State, config: RunnableConfig, runnable=sales_runnable) -> dict:
+def sales_assistant(
+    state: State, config: RunnableConfig, runnable=sales_runnable
+) -> dict:
     """
     LangGraph node function for running the sales assistant LLM agent.
 
@@ -71,7 +74,39 @@ def sales_assistant(state: State, config: RunnableConfig, runnable=sales_runnabl
     - A dictionary with a `"messages"` key containing the new AI message(s).
     Example: `{"messages": [AIMessage(...)]}`
     """
-    pass
+    """
+    Runs the Sales Representative agent inside a LangGraph node.
+
+    Workflow
+    --------
+    1. Grabs the **`thread_id`** from *config* and registers it via
+   `set_thread_id(...)` so that all tools (cart, etc.) reference the
+   correct shopping cart.
+   2. Sets a safe **`user_id`** (the first user in the dataset) via
+   `set_user_id(...)`; some tools rely on this to filter purchase
+   history.
+   3. Invokes the `sales_runnable` pipeline (prompt + tools + LLM) with the
+   given *state* and *config*.
+    4. Wraps the LLM’s response in a dictionary  
+   `{"messages": [...]}` — the structure LangGraph expects.
+
+    The *runnable* parameter can be overridden in tests to inject a mock and
+    speed up execution.
+   """
+    # Manage IDs to make the tools work
+    thread_id = config.get("configurable", {}).get("thread_id")
+    if thread_id:
+        set_thread_id(thread_id)
+
+    # For these examples we always use the default user
+    set_user_id(DEFAULT_USER_ID)
+
+    # Run the LLM-tools pipeline
+    ai_messages = runnable.invoke(state, config=config)
+
+    # Normalize return
+    #    (If invoke already returns a list, we pack it as is.)
+    return {"messages": ai_messages}
 
 
 def support_assistant(state: State, config: RunnableConfig) -> dict:

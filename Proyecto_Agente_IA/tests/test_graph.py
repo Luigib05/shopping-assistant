@@ -47,6 +47,7 @@ def test_graph_invocation_with_mock(mock_graph):
     assert "response" in result
     assert "current_mode" in result
 
+
 def test_sales_assistant_is_callable_offline():
     from src import assistants
     from langchain_core.messages import AIMessage
@@ -62,8 +63,10 @@ def test_sales_assistant_is_callable_offline():
     state = {"messages": []}
 
     # Confirm function accepts the correct signature
-    if 'runnable' not in assistants.sales_assistant.__code__.co_varnames:
-        pytest.fail("sales_assistant() does not accept a 'runnable' argument — are you using the updated version?")
+    if "runnable" not in assistants.sales_assistant.__code__.co_varnames:
+        pytest.fail(
+            "sales_assistant() does not accept a 'runnable' argument — are you using the updated version?"
+        )
 
     # Try to run the function with the mock
     try:
@@ -73,7 +76,9 @@ def test_sales_assistant_is_callable_offline():
 
     # Validate the result
     if result is None:
-        pytest.fail("sales_assistant() returned None — is it implemented and returning a result?")
+        pytest.fail(
+            "sales_assistant() returned None — is it implemented and returning a result?"
+        )
     if not isinstance(result, dict):
         pytest.fail(f"Expected result to be a dict, got {type(result)}: {result}")
     if "messages" not in result:
@@ -81,4 +86,6 @@ def test_sales_assistant_is_callable_offline():
     if not isinstance(result["messages"], list):
         pytest.fail(f"'messages' is not a list: {result}")
     if not result["messages"] or not isinstance(result["messages"][0], AIMessage):
-        pytest.fail(f"'messages' must contain AIMessage objects, got: {result['messages']}")
+        pytest.fail(
+            f"'messages' must contain AIMessage objects, got: {result['messages']}"
+        )

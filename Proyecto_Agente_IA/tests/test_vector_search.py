@@ -3,6 +3,7 @@ import pytest
 
 from src.tools import search_products, search_tool
 
+
 # --- Fixtures for global patching ---
 @pytest.fixture(autouse=True)
 def patch_get_vector_store():
@@ -30,6 +31,7 @@ def patch_get_vector_store():
 
 
 # --- Unit tests ---
+
 
 def test_search_products_with_mocked_vectorstore():
     result = search_products("milk")

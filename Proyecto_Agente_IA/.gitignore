@@ -1,0 +1,13 @@
+# Virtual env. and dependencies
+.venv/
+__pycache__/
+
+# Local data and large files
+dataset/
+vector_db/
+tmp_dataset.zip
+
+# Test / experiment files
+src/my_test.py
+tests/__pycache__/
+
